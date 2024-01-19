@@ -1,9 +1,6 @@
 ## Group members: 
 Dana Rose, Malakhi Griffin, Alyssa Khoury
 
-## Relevant Experience:
-
-
 ## Communication: 
 Our group will communicate through Discord in a private chat.
 
