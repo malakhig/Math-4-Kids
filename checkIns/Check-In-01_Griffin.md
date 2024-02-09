@@ -1,5 +1,5 @@
 ## What have you contributed to the project between the last check in and this check in?
-Added an initail login-in screen to the project and pushed
+Helped add an initiall login-in screen to the project 
 ## What have you learned between the last check in and this check in?
 This is the first check in but I leanred how to update files when there are commits made
 ## What do you need help with?
