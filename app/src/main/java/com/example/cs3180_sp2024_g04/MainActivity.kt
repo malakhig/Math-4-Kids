@@ -15,7 +15,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,8 +42,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -80,9 +84,14 @@ fun LoginForm() {
                 .fillMaxSize()
                 .padding(horizontal = 30.dp)
         ) {
+            Image (
+                painter = painterResource(R.drawable.math_logo_png),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+            )
             Text(text = "Math 4 Kids",
                 fontSize = 30.sp,
-            modifier = Modifier.padding(20.dp))
+                modifier = Modifier.padding(20.dp))
             LoginField(
                 value = credentials.login,
                 onChange = { data -> credentials = credentials.copy(login = data) },
@@ -241,5 +250,5 @@ fun PasswordField(
 @Preview(showBackground = true, device = "id:Nexus One", showSystemUi = true)
 @Composable
 fun LoginFormPreview() {
-        LoginForm()
+    LoginForm()
 }
