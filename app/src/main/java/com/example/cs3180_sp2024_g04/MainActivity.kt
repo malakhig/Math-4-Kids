@@ -88,7 +88,7 @@ fun LoginForm() {
             Image (
                 painter = painterResource(R.drawable.math_logo_png),
                 contentDescription = null,
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
             )
             Text(text = "Math 4 Kids",
                 fontSize = 30.sp,
