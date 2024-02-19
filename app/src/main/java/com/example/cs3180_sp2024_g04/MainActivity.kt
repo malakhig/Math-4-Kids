@@ -81,7 +81,8 @@ fun LoginForm() {
                 .padding(horizontal = 30.dp)
         ) {
             Text(text = "Math 4 Kids",
-                modifier = Modifier.padding(20.dp))
+                fontSize = 30.sp,
+            modifier = Modifier.padding(20.dp))
             LoginField(
                 value = credentials.login,
                 onChange = { data -> credentials = credentials.copy(login = data) },
@@ -240,5 +241,5 @@ fun PasswordField(
 @Preview(showBackground = true, device = "id:Nexus One", showSystemUi = true)
 @Composable
 fun LoginFormPreview() {
-    LoginForm()
+        LoginForm()
 }
