@@ -18,6 +18,7 @@ import android.content.Intent
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -82,7 +83,7 @@ fun LoginForm() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 30.dp)
+                .background(color = MaterialTheme.colorScheme.secondary)
         ) {
             Image (
                 painter = painterResource(R.drawable.math_logo_png),
