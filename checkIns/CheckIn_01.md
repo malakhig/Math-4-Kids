@@ -1,4 +1,5 @@
-**Check in #1. **
+## Check in #1
+###### Dana Rose
 
 **What have you contributed to the project between the last check in and this check in?**
 
