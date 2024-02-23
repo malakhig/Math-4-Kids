@@ -30,13 +30,13 @@
 
 #### Malakhi Griffin:
 ##### What have you contributed to the project between the last check in and this check in?
-- 
+- I helped find images for our initial login screen I also used my emulator to show how the app will run on an actual phone.
 
 ##### What have you learned between the last check in and this check in?
-- 
+- I have learned how to change the color of the background and how to import and use drawables(images).
 
 ##### What do you need help with?
-- 
+- We need help with navigating and also foramtting the Ui when it comes to different types of phones.
 
 ##### What do you expect to complete between the next check in and this check in?
-- 
+- We expect to navigate to an alternative page and begin working on the Ui of the main application.
