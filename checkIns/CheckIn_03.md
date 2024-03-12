@@ -11,7 +11,7 @@
 - I could use some extra help on navigation. I understand there is supposed to be a NavController, a NavGraph, and a NavHost, but I struggle to know when to use them and how to properly connect all of our screens.
 
 ##### What do you expect to complete between the next check in and this check in?
-- Bewtween this check in and next check in, I expect to have our screens connected and have some sort of navigation. I also expect to our new screens to have some sort of functionality.
+- Between this check in and next check in, I expect to have our screens connected and have some sort of navigation. I also expect to our new screens to have some sort of functionality.
 
 
 #### Alyssa Khoury:
