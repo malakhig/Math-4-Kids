@@ -30,13 +30,13 @@
 
 #### Malakhi Griffin:
 ##### What have you contributed to the project between the last check in and this check in?
-- 
+- I helped create more screens that will be used for final app like the select screen and game screen.
 
 ##### What have you learned between the last check in and this check in?
--
+-I have learned about navigation and using state flow within the project the alternate the screens and swtich between them.
 
 ##### What do you need help with?
-- 
+- Although I sort of know how to use NavHost I still need practice with navigation. I also know about state flow academically I'm not sure how to use it pratically within the app that we're building.
 
 ##### What do you expect to complete between the next check in and this check in?
-- 
+- I hope to complete the select screen and the game screen navigation and UI. Also I would like to complete the addition page and the subtraction page UI and functionality.
