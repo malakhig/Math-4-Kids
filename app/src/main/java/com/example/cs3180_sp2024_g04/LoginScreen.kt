@@ -66,7 +66,7 @@ fun LoginForm() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.secondary)
+                .background(color = MaterialTheme.colorScheme.primary)
         ) {
             Image (
                 painter = painterResource(R.drawable.math_logo_png),

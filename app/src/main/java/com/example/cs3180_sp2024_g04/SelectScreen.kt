@@ -1,4 +1,5 @@
 package com.example.cs3180_sp2024_g04
+import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -16,6 +17,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -93,7 +97,9 @@ fun SelectOptionScreen(
     var selectedValue by rememberSaveable { mutableStateOf("") }
 
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.primary)
         //verticalArrangement = Arrangement.SpaceBetween
 
 
@@ -106,8 +112,10 @@ fun SelectOptionScreen(
             verticalAlignment = Alignment.Bottom
         )*/
             Button(
-                enabled = selectedValue.isNotEmpty(),
+                //enabled = selectedValue.isNotEmpty(),
                 onClick = onAdditionButtonClicked,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.LightGray),
                 modifier = Modifier.weight(1f)
                     .width(200.dp)
                     .align(alignment = Alignment.CenterHorizontally)
@@ -124,8 +132,10 @@ fun SelectOptionScreen(
             }
             Button(
                 // the button is enabled when the user makes a selection
-                enabled = selectedValue.isNotEmpty(),
+                //enabled = selectedValue.isNotEmpty(),
                 onClick = onSubtractionButtonClicked,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.LightGray),
                 modifier = Modifier.weight(1f)
                     .width(200.dp)
                     .align(alignment = Alignment.CenterHorizontally)
