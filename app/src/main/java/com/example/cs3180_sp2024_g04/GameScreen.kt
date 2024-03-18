@@ -1,5 +1,6 @@
 package com.example.cs3180_sp2024_g04
 
+<<<<<<< app/src/main/java/com/example/cs3180_sp2024_g04/GameScreen.kt
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,3 +57,25 @@ fun gamePreview(){
     flashCard(operator = true, operand1 = 60, operand2 = 10)
 }
 
+@Composable
+fun ShowMathProblem (AddOrSub: Boolean = true, MaxValue: Int = 10) {
+    var Op1 = getRandomNumber(MaxValue)
+    var Op2 = getRandomNumber(MaxValue)
+    flashCard(AddOrSub, Op1, Op2)
+}
+
+
+@Composable
+fun getRandomNumber(MaxValue: Int = 10): Int {
+    var randomValues = Math.random() % MaxValue
+    var anInt = (randomValues).toInt()
+    return anInt
+}
+
+@Preview(showBackground = true, device = "id:Nexus One", showSystemUi = true)
+@Composable
+fun GameScreenPreview() {
+    CS3180_SP2024_G04Theme {
+        ShowMathProblem(true, 10)
+    }
+}
