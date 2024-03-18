@@ -1,8 +1,7 @@
 package com.example.cs3180_sp2024_g04
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,10 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cs3180_sp2024_g04.ui.theme.CS3180_SP2024_G04Theme
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 
 enum class CurrentScreen(){
     Login,
@@ -100,10 +102,10 @@ fun SelectOptionScreen(
             ) {
                 //Text(stringResource(R.string.cancel))
             }
-            Button(
+            OutlinedButton(
                 modifier = Modifier.weight(1f),
                 // the button is enabled when the user makes a selection
-                enabled = selectedValue.isNotEmpty(),
+              //  enabled = selectedValue.isNotEmpty(),
                 onClick = onNextButtonClicked
             ) {
                 //Text(stringResource(R.string.next))
