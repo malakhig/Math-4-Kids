@@ -60,6 +60,9 @@ fun ShowMathProblem (AddOrSub: Boolean = true, MaxValue: Int = 10) {
     var Op1 by remember{mutableStateOf(0)}
     var Op2 by remember{mutableStateOf(0)}
 
+    Button(onClick = { CurrentScreen.Select }) {
+        Text("Exit")
+    }
 
     Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally ) {
         flashCard(Modifier, AddOrSub, Op1, Op2)
