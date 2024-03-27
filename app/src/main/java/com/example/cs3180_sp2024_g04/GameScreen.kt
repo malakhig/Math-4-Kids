@@ -21,17 +21,51 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-
 @Composable
-fun flashCard(modifier: Modifier = Modifier, operator: Boolean, operand1:Int, operand2:Int){
+fun GameScreen(
+    onNextButtonClicked: (Int) -> Unit,
+    onCancelButtonClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))
+        ) {
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
+            Image(
+                painter = painterResource(R.drawable.cupcake),
+                contentDescription = null,
+                modifier = Modifier.width(300.dp)
+            )
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
+            Text(
+                text = stringResource(R.string.order_cupcakes),
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_small)))
+        }
 
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(50.dp),
-            horizontalAlignment = Alignment.End) {
+        }
+    }
+
+    @Composable
+    fun flashCard(modifier: Modifier = Modifier, operator: Boolean, operand1: Int, operand2: Int) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(50.dp),
+            horizontalAlignment = Alignment.End
+        ) {
             Row(modifier = Modifier,) {
-                Text(modifier = Modifier,text = operand1.toString(), fontSize = 50.sp
-                    )
+                Text(
+                    modifier = Modifier, text = operand1.toString(), fontSize = 50.sp
+                )
             }
             Row {
                 Row() {
@@ -50,34 +84,31 @@ fun flashCard(modifier: Modifier = Modifier, operator: Boolean, operand1:Int, op
     }
 
 
+    @Composable
+    fun ShowMathProblem(AddOrSub: Boolean = true, MaxValue: Int = 10) {
+        var Op1 = getRandomNumber(MaxValue)
+        var Op2 = getRandomNumber(MaxValue)
+
+
+        Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+            flashCard(Modifier, AddOrSub, Op1, Op2)
+
+            Button(onClick = { /*TODO*/ }) {
+
+
+            }
+        }
+    }
+
+    @Composable
+    fun getRandomNumber(MaxValue: Int = 10): Int {
+        var randomValues = Math.random() % MaxValue
+        var anInt = (randomValues).toInt()
+        return anInt
+    }
 
 @Preview(showBackground = true, device = "id:Nexus One", showSystemUi = true)
 @Composable
 fun gamePreview(){
     ShowMathProblem()
 }
-
-@Composable
-fun ShowMathProblem (AddOrSub: Boolean = true, MaxValue: Int = 10) {
-    var Op1 = getRandomNumber(MaxValue)
-    var Op2 = getRandomNumber(MaxValue)
-
-
-    Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally ) {
-        flashCard(Modifier, AddOrSub, Op1, Op2)
-
-        Button(onClick = { /*TODO*/ }) {
-
-
-        }
-    }
-}
-
-
-@Composable
-fun getRandomNumber(MaxValue: Int = 10): Int {
-    var randomValues = Math.random() % MaxValue
-    var anInt = (randomValues).toInt()
-    return anInt
-}
-

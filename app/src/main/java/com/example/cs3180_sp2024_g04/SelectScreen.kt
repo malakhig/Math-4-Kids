@@ -42,54 +42,53 @@ import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cs3180_sp2024_g04.ui.theme.CS3180_SP2024_G04Theme
 
-enum class CurrentScreen(){
-    Login,
-    Select,
-    Addition,
-    Subtraction
-}
-
-@Composable
-fun MathApp(
-    viewModel: OrderViewModel = viewModel(),
-    navController: NavHostController = rememberNavController()
-) {
-    // Get current back stack entry
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    // Get the name of the current screen
-    val currentScreen = CurrentScreen.valueOf(
-        backStackEntry?.destination?.route ?: CurrentScreen.Login.name
-    )
-
-    Scaffold(
-    ) { innerPadding ->
-        val uiState by viewModel.uiState.collectAsState()
-
-        NavHost(
-            navController = navController,
-            startDestination = CurrentScreen.Login.name,
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(innerPadding)
-        ) {
-            composable(route = CurrentScreen.Select.name) {
-                SelectOptionScreen(
-                    onSubtractionButtonClicked = {
-                        viewModel.setQuantity(it)
-                        navController.navigate(CurrentScreen.Addition.name)
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(dimensionResource(R.dimen.padding_medium))
-                )
-            }
-        }
-    }
-}
+//enum class CurrentScreen(){
+//    Login,
+//    Select,
+//    Addition,
+//    Subtraction
+//}
+//
+//@Composable
+//fun MathApp(
+//    viewModel: OrderViewModel = viewModel(),
+//    navController: NavHostController = rememberNavController()
+//) {
+//    // Get current back stack entry
+//    val backStackEntry by navController.currentBackStackEntryAsState()
+//    // Get the name of the current screen
+//    val currentScreen = CurrentScreen.valueOf(
+//        backStackEntry?.destination?.route ?: CurrentScreen.Login.name
+//    )
+//
+//    Scaffold(
+//    ) { innerPadding ->
+//        val uiState by viewModel.uiState.collectAsState()
+//
+//        NavHost(
+//            navController = navController,
+//            startDestination = CurrentScreen.Login.name,
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .verticalScroll(rememberScrollState())
+//                .padding(innerPadding)
+//        ) {
+//            composable(route = CurrentScreen.Select.name) {
+//                SelectOptionScreen(
+//                    onSubtractionButtonClicked = {
+//                        viewModel.setQuantity(it)
+//                        navController.navigate(CurrentScreen.Addition.name)
+//                    },
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .padding(dimensionResource(R.dimen.padding_medium))
+//                )
+//            }
+//        }
+//    }
+//}
 @Composable
 fun SelectOptionScreen(
-    onSelectionChanged: (String) -> Unit = {},
     onAdditionButtonClicked: () -> Unit = {},
     onSubtractionButtonClicked: () -> Unit = {},
     modifier: Modifier = Modifier
