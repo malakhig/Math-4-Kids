@@ -29,12 +29,12 @@
 
 #### Malakhi Griffin:
 ##### What have you contributed to the project between the last check in and this check in?
-- 
+- Since the last check in I have made some changes to the UI of the gamescreen, in particular the equation that must be solved.
 
 ##### What have you learned between the last check in and this check in?
--
+-I have learned more about gradle as well as miscellaneous files in android studio like the SDK files, I also learned more about the emulator and how to troubleshoot it.
 ##### What do you need help with?
-- 
+- We still need to finish the navigation between the screen as well as make improvements to the UI and functionality.
 
 ##### What do you expect to complete between the next check in and this check in?
-- 
+- By the next check in we will have navigation complete and we will have improvements to the overall look of the app 
