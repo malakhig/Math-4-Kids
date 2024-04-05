@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -73,6 +74,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 enum class LoginScreen(@StringRes val title: Int) {
@@ -184,7 +186,7 @@ fun MathApp(
             )
         }
     ) { innerPadding ->
-        val uiState by viewModel.uiState.collectAsState()
+        val uiState by viewModel.loginState.collectAsState()
 
         NavHost(
             navController = navController,
@@ -207,51 +209,45 @@ fun MathApp(
                 )
             }
             composable(route = LoginScreen.Select.name) {
-                val context = LocalContext.current
                 GameScreen(
                     onCancelButtonClicked = {
-                        cancelAndNavigateToSelectScreen(viewModel, navController)
+                        cancelAndNavigateToSelectScreen(navController)
                     },
-                    options = DataSource.flavors.map { id -> context.resources.getString(id) },
-                    onSelectionChanged = { viewModel.setFlavor(it) },
+//                    options = DataSource.flavors.map { id -> context.resources.getString(id) },
                     modifier = Modifier.fillMaxHeight()
                 )
             }
-            composable(route = LoginScreen.Pickup.name) {
-                GameScreen(
-                    subtotal = uiState.price,
-                    onNextButtonClicked = { navController.navigate(CupcakeScreen.Summary.name) },
-                    onCancelButtonClicked = {
-                        cancelAndNavigateToSelectScreen(viewModel, navController)
-                    },
-                    options = uiState.pickupOptions,
-                    onSelectionChanged = { viewModel.setDate(it) },
-                    modifier = Modifier.fillMaxHeight()
-                )
-            }
-            composable(route = CupcakeScreen.Summary.name) {
-                val context = LocalContext.current
-                OrderSummaryScreen(
-                    orderUiState = uiState,
-                    onCancelButtonClicked = {
-                        cancelAndNavigateToSelectScreen(viewModel, navController)
-                    },
-                    onSendButtonClicked = { subject: String, summary: String ->
-                        shareOrder(context, subject = subject, summary = summary)
-                    },
-                    modifier = Modifier.fillMaxHeight()
-                )
-            }
+//            composable(route = LoginScreen.Pickup.name) {
+//                GameScreen(
+//                    onNextButtonClicked = { navController.navigate(CupcakeScreen.Summary.name) },
+//                    onCancelButtonClicked = {
+//                        cancelAndNavigateToSelectScreen(navController)
+//                    },
+//                    onSelectionChanged = { viewModel.setDate(it) },
+//                    modifier = Modifier.fillMaxHeight()
+//                )
+//            }
+//            composable(route = CupcakeScreen.Summary.name) {
+//                val context = LocalContext.current
+//                OrderSummaryScreen(
+//                    orderUiState = uiState,
+//                    onCancelButtonClicked = {
+//                        cancelAndNavigateToSelectScreen(navController)
+//                    },
+//                    onSendButtonClicked = { subject: String, summary: String ->
+//                        shareOrder(context, subject = subject, summary = summary)
+//                    },
+//                    modifier = Modifier.fillMaxHeight()
+//                )
+//            }
         }
     }
 }
 
 private fun cancelAndNavigateToSelectScreen(
-    viewModel: OrderViewModel,
     navController: NavHostController
 ) {
-    viewModel.resetOrder()
-    navController.popBackStack(CupcakeScreen.Start.name, inclusive = false)
+    navController.popBackStack(LoginScreen.Login.name, inclusive = false)
 }
 
 
