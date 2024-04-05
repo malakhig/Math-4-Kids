@@ -1,5 +1,6 @@
 package com.example.cs3180_sp2024_g04
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,29 +54,52 @@ fun flashCard(modifier: Modifier = Modifier, operator: Boolean, operand1:Int, op
 @Preview(showBackground = true, device = "id:Nexus One", showSystemUi = true)
 @Composable
 fun gamePreview(){
-    ShowMathProblem()
+    ShowMathProblem(value = "Answer", onChange = {})
+
 }
 
 @Composable
-fun ShowMathProblem (AddOrSub: Boolean = true, MaxValue: Int = 10) {
+fun ShowMathProblem (
+    AddOrSub: Boolean = true,
+    MaxValue: Int = 10,
+    value: String = "",
+    onChange: (String) -> Unit = {}
+) {
     var Op1 by remember{mutableStateOf(0)}
     var Op2 by remember{mutableStateOf(0)}
+    var text by remember { mutableStateOf("Answer") }
 
-    Button(onClick = { CurrentScreen.Select }) {
+    Button(onClick = { /* Handle exit action here */ }) {
         Text("Exit")
     }
 
-    Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally ) {
+    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally ) {
         flashCard(Modifier, AddOrSub, Op1, Op2)
 
-        Button(onClick = {
-            Op1 = getRandomNumber(MaxValue)
-            Op2 = getRandomNumber(MaxValue)}) {
-            Text("Next")
+        Row(
+            modifier = Modifier.padding(vertical = 16.dp),
+            horizontalArrangement = Arrangement.Center
+        ){
+            TextField(
+                modifier = Modifier.fillMaxWidth(0.8f),
+                value = text,
+                onValueChange = { text = it }
+            )
+        }
 
+        Button(
+            onClick = {
+                Op1 = getRandomNumber(MaxValue)
+                Op2 = getRandomNumber(MaxValue)
+            },
+            modifier = Modifier.padding(vertical = 16.dp)
+        ) {
+            Text("Next")
         }
     }
 }
+
+
 
 
 fun getRandomNumber(MaxValue: Int = 10): Int {
