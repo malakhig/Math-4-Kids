@@ -104,15 +104,7 @@ fun SelectOptionScreen(
 
 
     ) {
-        /*Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.padding_medium)),
-            horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
-            verticalAlignment = Alignment.Bottom
-        )*/
             Button(
-                //enabled = selectedValue.isNotEmpty(),
                 onClick = onAdditionButtonClicked,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.LightGray),
@@ -128,11 +120,8 @@ fun SelectOptionScreen(
                     textAlign = TextAlign.Center,
                     lineHeight = 2.5.em,
                     modifier = modifier.size(150.dp).padding(top = 27.dp))
-            //Text(stringResource(R.string.cancel))
             }
             Button(
-                // the button is enabled when the user makes a selection
-                //enabled = selectedValue.isNotEmpty(),
                 onClick = onSubtractionButtonClicked,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.LightGray),
@@ -148,7 +137,6 @@ fun SelectOptionScreen(
                     textAlign = TextAlign.Center,
                     modifier = modifier.size(150.dp).padding(top = 30.dp))
             }
-                //Text(stringResource(R.string.next))
             }
         }
 
