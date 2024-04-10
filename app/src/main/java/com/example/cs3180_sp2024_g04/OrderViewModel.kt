@@ -2,17 +2,13 @@ package com.example.cs3180_sp2024_g04
 
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 
-
-/**
- * [OrderViewModel] holds information about a cupcake order in terms of quantity, flavor, and
- * pickup date. It also knows how to calculate the total price based on these order details.
- */
 class OrderViewModel : ViewModel() {
 
     private var username: String = " "
@@ -28,31 +24,60 @@ class OrderViewModel : ViewModel() {
         this.password = password
         _loginState.value = LoginState.Select
     }
+
+    fun cancelAndNavigateToSelectScreen(
+        navController: NavHostController
+    ) {
+        navController.popBackStack(LoginScreen.Login.name, inclusive = false)
+    }
+
+    fun navigateToGame() {
+        _loginState.value = LoginState.Game
+    }
 }
 
 class GameViewModel : ViewModel() {
 
-    private val _gameState = MutableStateFlow<GameScreenState>(GameScreenState.Input)
+    data class Flashcard(
+        val question: String,
+        val answer: Int
+    )
 
+    private val _gameState = MutableStateFlow<GameScreenState>(GameScreenState.Input)
     val gameState: StateFlow<GameScreenState> = _gameState.asStateFlow()
 
-    private var correctAnswer: Int = 0
+    private val flashcards: List<Flashcard> = listOf(
+        Flashcard("2 + 2", 4),
+        Flashcard("5 - 3", 2)
+        //more flashcards here
+    )
 
-    fun startNewGame(operation: Operation) {
-        val number1 = (1..10).random()
-        val number2 = (1..10).random()
+    private var currentFlashcardIndex: Int = 0
 
-        correctAnswer = if (operation == Operation.Addition) {
-            number1 + number1
-        } else{
-            number1 - number2   //subtraction
-        }
-        _gameState.value = GameScreenState.Play(number1, number2)
+    fun startNewGame() {
+        currentFlashcardIndex = 0
+        showNextFlashcard()
     }
 
+     private fun showNextFlashcard() {
+         if (currentFlashcardIndex < flashcards.size) {
+             val flashcard = flashcards[currentFlashcardIndex]
+             _gameState.value = GameScreenState.Play(flashcard.question, flashcard.answer)
+         } else {
+             _gameState.value = GameScreenState.GameOver
+         }
+     }
+
+
     fun checkAnswer(answer: Int) {
-        val isCorrect = answer == 1    // need to change to find the correct answer
+        val currentFlashcard = flashcards[currentFlashcardIndex]
+        val isCorrect = answer == currentFlashcard.answer
         _gameState.value = GameScreenState.Result(isCorrect)
+    }
+
+    fun moveToNextFlashcard() {
+        currentFlashcardIndex++
+        showNextFlashcard()
     }
 }
 

@@ -2,8 +2,9 @@ package com.example.cs3180_sp2024_g04
 
 
 sealed class LoginState {
-    object Input : LoginState()
-    object Select : LoginState()
+    data object Input : LoginState()
+    data object Select : LoginState()
+    data object Game : LoginState()
 }
 
 
@@ -14,7 +15,8 @@ enum class Operation {
 
 
 sealed class GameScreenState {
-    object Input : GameScreenState()
-    data class Play(val number1: Int, val number2: Int) : GameScreenState()
+    data object Input : GameScreenState()
+    data class Play(val question: String, val answer: Int) : GameScreenState()
     data class Result(val isCorrect: Boolean) : GameScreenState()
+    data object GameOver : GameScreenState()
 }

@@ -22,6 +22,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -84,26 +85,37 @@ enum class LoginScreen(@StringRes val title: Int) {
 }
 
 @Composable
-fun LoginForm() {
-    Surface {
-        var credentials by remember { mutableStateOf(Credentials()) }
-        val context = LocalContext.current
+fun LoginForm(
+    onSubmit: (String, String) -> Unit
+) {
 
+    var credentials by remember { mutableStateOf(Credentials()) }
+    val context = LocalContext.current
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.primary)
+            .padding(horizontal = 16.dp),
+        contentAlignment = Alignment.Center
+    ) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.primary)
+                //.background(color = MaterialTheme.colorScheme.primary)
         ) {
-            Image (
+            Image(
                 painter = painterResource(R.drawable.math_logo_png),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
             )
-            Text(text = "Math 4 Kids",
+            Text(
+                text = "Math 4 Kids",
                 fontSize = 30.sp,
-                modifier = Modifier.padding(20.dp))
+                modifier = Modifier.padding(20.dp)
+            )
             LoginField(
                 value = credentials.login,
                 onChange = { data -> credentials = credentials.copy(login = data) },
@@ -139,6 +151,7 @@ fun LoginForm() {
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -186,8 +199,38 @@ fun MathApp(
             )
         }
     ) { innerPadding ->
-        val uiState by viewModel.loginState.collectAsState()
+        val loginState by viewModel.loginState.collectAsState()
 
+        when(loginState) {
+            LoginState.Input -> {
+                LoginForm(
+                    onSubmit = {username, password ->
+                        viewModel.submitLogin(username, password)
+                    }
+                )
+            }
+            LoginState.Select -> {
+                SelectOptionScreen(
+                    onAdditionButtonClicked = {
+                        viewModel.navigateToGame()  //still need to implement
+                },
+                    onSubtractionButtonClicked = {
+                        viewModel.navigateToGame()
+                    },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(dimensionResource(R.dimen.padding_medium))
+                )
+            }
+            LoginState.Game -> {
+               GameScreen(
+                   onCancelButtonClicked = {
+                       viewModel.cancelAndNavigateToSelectScreen(navController)  //still need to implement
+                   },
+                   modifier = Modifier.fillMaxHeight()
+               )
+        }
+}
         NavHost(
             navController = navController,
             startDestination = LoginScreen.Login.name,
@@ -197,58 +240,32 @@ fun MathApp(
                 .padding(innerPadding)
         ) {
             composable(route = LoginScreen.Login.name) {
-                SelectOptionScreen(
-                    onAdditionButtonClicked = {
-                        navController.navigate(LoginScreen.Game.name)
-                    },
-                    onSubtractionButtonClicked = {
-                        navController.navigate(LoginScreen.Game.name)},
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(dimensionResource(R.dimen.padding_medium))
-                )
+//                SelectOptionScreen(
+//                    onAdditionButtonClicked = {
+//                        navController.navigate(LoginScreen.Game.name)
+//                    },
+//                    onSubtractionButtonClicked = {
+//                        navController.navigate(LoginScreen.Game.name)},
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .padding(dimensionResource(R.dimen.padding_medium))
+//                )
             }
             composable(route = LoginScreen.Select.name) {
-                GameScreen(
-                    onCancelButtonClicked = {
-                        cancelAndNavigateToSelectScreen(navController)
-                    },
-//                    options = DataSource.flavors.map { id -> context.resources.getString(id) },
-                    modifier = Modifier.fillMaxHeight()
-                )
-            }
-//            composable(route = LoginScreen.Pickup.name) {
 //                GameScreen(
-//                    onNextButtonClicked = { navController.navigate(CupcakeScreen.Summary.name) },
 //                    onCancelButtonClicked = {
 //                        cancelAndNavigateToSelectScreen(navController)
 //                    },
-//                    onSelectionChanged = { viewModel.setDate(it) },
+////                    options = DataSource.flavors.map { id -> context.resources.getString(id) },
 //                    modifier = Modifier.fillMaxHeight()
 //                )
-//            }
-//            composable(route = CupcakeScreen.Summary.name) {
-//                val context = LocalContext.current
-//                OrderSummaryScreen(
-//                    orderUiState = uiState,
-//                    onCancelButtonClicked = {
-//                        cancelAndNavigateToSelectScreen(navController)
-//                    },
-//                    onSendButtonClicked = { subject: String, summary: String ->
-//                        shareOrder(context, subject = subject, summary = summary)
-//                    },
-//                    modifier = Modifier.fillMaxHeight()
-//                )
-//            }
+            }
+//
         }
     }
 }
 
-private fun cancelAndNavigateToSelectScreen(
-    navController: NavHostController
-) {
-    navController.popBackStack(LoginScreen.Login.name, inclusive = false)
-}
+
 
 
 fun checkCredentials(creds: Credentials, context: Context): Boolean {
@@ -340,9 +357,6 @@ fun PasswordField(
 
     var isPasswordVisible by remember { mutableStateOf(false) }
 
-    val leadingIcon = @Composable {
-
-    }
     val trailingIcon = @Composable {
         IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
 
@@ -373,5 +387,6 @@ fun PasswordField(
 @Preview(showBackground = true, device = "id:Nexus One", showSystemUi = true)
 @Composable
 fun LoginFormPreview() {
-    LoginForm()
+    LoginForm(onSubmit = {username, password ->
+        println("Username: $username, Password: $password")})
 }
