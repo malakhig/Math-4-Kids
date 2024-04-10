@@ -1,11 +1,22 @@
 package com.example.cs3180_sp2024_g04
 
-data class OrderUiState(
-    /** Flavor of the cupcakes in the order (such as "Chocolate", "Vanilla", etc..) */
-    val flavor: String = "",
-    /** Selected date for pickup (such as "Jan 1") */
-    val date: String = "",
-    /** Total price for the order */
-    val price: String = "",
-    val pickupOptions: Unit
-)
+
+sealed class LoginState {
+    data object Input : LoginState()
+    data object Select : LoginState()
+    data object Game : LoginState()
+}
+
+
+enum class Operation {
+    Addition,
+    Subtraction
+}
+
+
+sealed class GameScreenState {
+    data object Input : GameScreenState()
+    data class Play(val question: String, val answer: Int) : GameScreenState()
+    data class Result(val isCorrect: Boolean) : GameScreenState()
+    data object GameOver : GameScreenState()
+}

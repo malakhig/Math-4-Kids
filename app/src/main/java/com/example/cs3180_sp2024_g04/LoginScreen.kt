@@ -17,26 +17,36 @@ import android.content.Context
 import android.content.Intent
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,36 +56,66 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.cs3180_sp2024_g04.ui.theme.CS3180_SP2024_G04Theme
+import javax.sql.DataSource
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
+
+
+enum class LoginScreen(@StringRes val title: Int) {
+    Login(title = R.string.app_name),
+    Game(title = R.string.game_screen),
+    Select(title = R.string.select_screen)
+}
 
 @Composable
-fun LoginForm() {
-    Surface {
-        var credentials by remember { mutableStateOf(Credentials()) }
-        val context = LocalContext.current
+fun LoginForm(
+    onSubmit: (String, String) -> Unit
+) {
 
+    var credentials by remember { mutableStateOf(Credentials()) }
+    val context = LocalContext.current
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.primary)
+            .padding(horizontal = 16.dp),
+        contentAlignment = Alignment.Center
+    ) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.primary)
+                //.background(color = MaterialTheme.colorScheme.primary)
         ) {
-            Image (
+            Image(
                 painter = painterResource(R.drawable.math_logo_png),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
             )
-            Text(text = "Math 4 Kids",
+            Text(
+                text = "Math 4 Kids",
                 fontSize = 30.sp,
-                modifier = Modifier.padding(20.dp))
+                modifier = Modifier.padding(20.dp)
+            )
             LoginField(
                 value = credentials.login,
                 onChange = { data -> credentials = credentials.copy(login = data) },
@@ -111,6 +151,122 @@ fun LoginForm() {
         }
     }
 }
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MathAppBar(
+    currentScreen: LoginScreen,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    TopAppBar(
+        title = { Text(stringResource(currentScreen.title)) },
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        ),
+        modifier = modifier,
+        navigationIcon = {
+            if (canNavigateBack) {
+                IconButton(onClick = navigateUp) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.back_button)
+                    )
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun MathApp(
+    viewModel: OrderViewModel = viewModel(),
+    navController: NavHostController = rememberNavController()
+){
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    // Get the name of the current screen
+    val currentScreen = LoginScreen.valueOf(
+        backStackEntry?.destination?.route ?: LoginScreen.Login.name
+    )
+    Scaffold(
+        topBar = {
+            MathAppBar(
+                currentScreen = currentScreen,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() }
+            )
+        }
+    ) { innerPadding ->
+        val loginState by viewModel.loginState.collectAsState()
+
+        when(loginState) {
+            LoginState.Input -> {
+                LoginForm(
+                    onSubmit = {username, password ->
+                        viewModel.submitLogin(username, password)
+                    }
+                )
+            }
+            LoginState.Select -> {
+                SelectOptionScreen(
+                    onAdditionButtonClicked = {
+                        viewModel.navigateToGame()  //still need to implement
+                },
+                    onSubtractionButtonClicked = {
+                        viewModel.navigateToGame()
+                    },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(dimensionResource(R.dimen.padding_medium))
+                )
+            }
+            LoginState.Game -> {
+               GameScreen(
+                   onCancelButtonClicked = {
+                       viewModel.cancelAndNavigateToSelectScreen(navController)  //still need to implement
+                   },
+                   modifier = Modifier.fillMaxHeight()
+               )
+        }
+}
+        NavHost(
+            navController = navController,
+            startDestination = LoginScreen.Login.name,
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(innerPadding)
+        ) {
+            composable(route = LoginScreen.Login.name) {
+//                SelectOptionScreen(
+//                    onAdditionButtonClicked = {
+//                        navController.navigate(LoginScreen.Game.name)
+//                    },
+//                    onSubtractionButtonClicked = {
+//                        navController.navigate(LoginScreen.Game.name)},
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .padding(dimensionResource(R.dimen.padding_medium))
+//                )
+            }
+            composable(route = LoginScreen.Select.name) {
+//                GameScreen(
+//                    onCancelButtonClicked = {
+//                        cancelAndNavigateToSelectScreen(navController)
+//                    },
+////                    options = DataSource.flavors.map { id -> context.resources.getString(id) },
+//                    modifier = Modifier.fillMaxHeight()
+//                )
+            }
+//
+        }
+    }
+}
+
+
+
 
 fun checkCredentials(creds: Credentials, context: Context): Boolean {
     if (creds.isNotEmpty() && creds.login == "admin") {
@@ -201,9 +357,6 @@ fun PasswordField(
 
     var isPasswordVisible by remember { mutableStateOf(false) }
 
-    val leadingIcon = @Composable {
-
-    }
     val trailingIcon = @Composable {
         IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
 
@@ -234,5 +387,6 @@ fun PasswordField(
 @Preview(showBackground = true, device = "id:Nexus One", showSystemUi = true)
 @Composable
 fun LoginFormPreview() {
-    LoginForm()
+    LoginForm(onSubmit = {username, password ->
+        println("Username: $username, Password: $password")})
 }

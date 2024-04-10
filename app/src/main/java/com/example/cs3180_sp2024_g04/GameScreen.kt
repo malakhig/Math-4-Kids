@@ -1,20 +1,20 @@
 package com.example.cs3180_sp2024_g04
 
+import android.widget.Button
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,54 +54,27 @@ fun flashCard(modifier: Modifier = Modifier, operator: Boolean, operand1:Int, op
 @Preview(showBackground = true, device = "id:Nexus One", showSystemUi = true)
 @Composable
 fun gamePreview(){
-    ShowMathProblem(value = "Answer", onChange = {})
-
+    ShowMathProblem()
 }
 
 @Composable
-fun ShowMathProblem (
-    AddOrSub: Boolean = true,
-    MaxValue: Int = 10,
-    value: String = "",
-    onChange: (String) -> Unit = {}
-) {
-    var Op1 by remember{mutableStateOf(0)}
-    var Op2 by remember{mutableStateOf(0)}
-    var text by remember { mutableStateOf("Answer") }
+fun ShowMathProblem (AddOrSub: Boolean = true, MaxValue: Int = 10) {
+    var Op1 = getRandomNumber(MaxValue)
+    var Op2 = getRandomNumber(MaxValue)
 
-    Button(onClick = { /* Handle exit action here */ }) {
-        Text("Exit")
-    }
 
-    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally ) {
+    Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally ) {
         flashCard(Modifier, AddOrSub, Op1, Op2)
 
-        Row(
-            modifier = Modifier.padding(vertical = 16.dp),
-            horizontalArrangement = Arrangement.Center
-        ){
-            TextField(
-                modifier = Modifier.fillMaxWidth(0.8f),
-                value = text,
-                onValueChange = { text = it }
-            )
-        }
+        Button(onClick = { /*TODO*/ }) {
 
-        Button(
-            onClick = {
-                Op1 = getRandomNumber(MaxValue)
-                Op2 = getRandomNumber(MaxValue)
-            },
-            modifier = Modifier.padding(vertical = 16.dp)
-        ) {
-            Text("Next")
+
         }
     }
 }
 
 
-
-
+@Composable
 fun getRandomNumber(MaxValue: Int = 10): Int {
     var randomValues = Math.random() % MaxValue
     var anInt = (randomValues).toInt()

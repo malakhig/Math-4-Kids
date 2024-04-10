@@ -2,63 +2,82 @@ package com.example.cs3180_sp2024_g04
 
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-/** Price for a single cupcake */
-private const val PRICE_PER_CUPCAKE = 2.00
 
-/** Additional cost for same day pickup of an order */
-private const val PRICE_FOR_SAME_DAY_PICKUP = 3.00
-
-/**
- * [OrderViewModel] holds information about a cupcake order in terms of quantity, flavor, and
- * pickup date. It also knows how to calculate the total price based on these order details.
- */
 class OrderViewModel : ViewModel() {
 
-    /**
-     * Cupcake state for this order
-     */
-    private val _uiState = MutableStateFlow(OrderUiState(pickupOptions = pickupOptions()))
+    private var username: String = " "
 
-    private fun pickupOptions() {
+    private var password: String = " "
 
+    private val  _loginState = MutableStateFlow<LoginState>(LoginState.Input)
+
+    val loginState: StateFlow<LoginState> = _loginState.asStateFlow()
+
+    fun submitLogin(username: String, password: String) {
+        this.username = username
+        this.password = password
+        _loginState.value = LoginState.Select
     }
 
-    val uiState: StateFlow<OrderUiState> = _uiState.asStateFlow()
-
-    /**
-     * Set the quantity [numberCupcakes] of cupcakes for this order's state and update the price
-     */
-    fun setQuantity(numberCupcakes: NavBackStackEntry) {
-        _uiState.update { currentState ->
-            currentState.copy(
-            )
-        }
+    fun cancelAndNavigateToSelectScreen(
+        navController: NavHostController
+    ) {
+        navController.popBackStack(LoginScreen.Login.name, inclusive = false)
     }
 
-    /**
-     * Set the [desiredFlavor] of cupcakes for this order's state.
-     * Only 1 flavor can be selected for the whole order.
-     */
-    fun setFlavor(desiredFlavor: String) {
-        _uiState.update { currentState ->
-            currentState.copy(flavor = desiredFlavor)
-        }
+    fun navigateToGame() {
+        _loginState.value = LoginState.Game
+    }
+}
+
+class GameViewModel : ViewModel() {
+
+    data class Flashcard(
+        val question: String,
+        val answer: Int
+    )
+
+    private val _gameState = MutableStateFlow<GameScreenState>(GameScreenState.Input)
+    val gameState: StateFlow<GameScreenState> = _gameState.asStateFlow()
+
+    private val flashcards: List<Flashcard> = listOf(
+        Flashcard("2 + 2", 4),
+        Flashcard("5 - 3", 2)
+        //more flashcards here
+    )
+
+    private var currentFlashcardIndex: Int = 0
+
+    fun startNewGame() {
+        currentFlashcardIndex = 0
+        showNextFlashcard()
     }
 
-    /**
-     * Set the [pickupDate] for this order's state and update the price
-     */
-    fun setDate(pickupDate: String) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                date = pickupDate,
-            )
-        }
+     private fun showNextFlashcard() {
+         if (currentFlashcardIndex < flashcards.size) {
+             val flashcard = flashcards[currentFlashcardIndex]
+             _gameState.value = GameScreenState.Play(flashcard.question, flashcard.answer)
+         } else {
+             _gameState.value = GameScreenState.GameOver
+         }
+     }
+
+
+    fun checkAnswer(answer: Int) {
+        val currentFlashcard = flashcards[currentFlashcardIndex]
+        val isCorrect = answer == currentFlashcard.answer
+        _gameState.value = GameScreenState.Result(isCorrect)
+    }
+
+    fun moveToNextFlashcard() {
+        currentFlashcardIndex++
+        showNextFlashcard()
     }
 }
 
