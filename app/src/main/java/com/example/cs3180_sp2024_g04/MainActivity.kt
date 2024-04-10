@@ -65,7 +65,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    LoginForm()
+                    LoginForm(onSubmit = {username, password ->
+                        println("Username: $username, Password: $password")})
                 }
             }
         }

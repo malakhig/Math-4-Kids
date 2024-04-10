@@ -223,12 +223,7 @@ fun MathApp(
                 )
             }
             LoginState.Game -> {
-               GameScreen(
-                   onCancelButtonClicked = {
-                       viewModel.cancelAndNavigateToSelectScreen(navController)  //still need to implement
-                   },
-                   modifier = Modifier.fillMaxHeight()
-               )
+               GameScreen()
         }
 }
         NavHost(

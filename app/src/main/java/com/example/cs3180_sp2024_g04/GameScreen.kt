@@ -54,11 +54,11 @@ fun flashCard(modifier: Modifier = Modifier, operator: Boolean, operand1:Int, op
 @Preview(showBackground = true, device = "id:Nexus One", showSystemUi = true)
 @Composable
 fun gamePreview(){
-    ShowMathProblem()
+    GameScreen()
 }
 
 @Composable
-fun ShowMathProblem (AddOrSub: Boolean = true, MaxValue: Int = 10) {
+fun GameScreen (AddOrSub: Boolean = true, MaxValue: Int = 10) {
     var Op1 = getRandomNumber(MaxValue)
     var Op2 = getRandomNumber(MaxValue)
 
