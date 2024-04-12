@@ -86,7 +86,9 @@ enum class LoginScreen(@StringRes val title: Int) {
 
 @Composable
 fun LoginForm(
-    onSubmit: (String, String) -> Unit
+    onSubmit: (String, String) -> Unit,
+    navigateToSelectScreen: () -> Unit
+
 ) {
 
     var credentials by remember { mutableStateOf(Credentials()) }
@@ -139,9 +141,8 @@ fun LoginForm(
             )
             Spacer(modifier = Modifier.height(20.dp))
             Button(
-                onClick = {
-                    if (!checkCredentials(credentials, context)) credentials = Credentials()
-                },
+                onClick = navigateToSelectScreen
+                ,
                 enabled = credentials.isNotEmpty(),
                 shape = RoundedCornerShape(5.dp),
                 modifier = Modifier.fillMaxWidth()
@@ -153,112 +154,6 @@ fun LoginForm(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MathAppBar(
-    currentScreen: LoginScreen,
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    TopAppBar(
-        title = { Text(stringResource(currentScreen.title)) },
-        colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ),
-        modifier = modifier,
-        navigationIcon = {
-            if (canNavigateBack) {
-                IconButton(onClick = navigateUp) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back_button)
-                    )
-                }
-            }
-        }
-    )
-}
-
-@Composable
-fun MathApp(
-    viewModel: OrderViewModel = viewModel(),
-    navController: NavHostController = rememberNavController()
-){
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    // Get the name of the current screen
-    val currentScreen = LoginScreen.valueOf(
-        backStackEntry?.destination?.route ?: LoginScreen.Login.name
-    )
-    Scaffold(
-        topBar = {
-            MathAppBar(
-                currentScreen = currentScreen,
-                canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() }
-            )
-        }
-    ) { innerPadding ->
-        val loginState by viewModel.loginState.collectAsState()
-
-        when(loginState) {
-            LoginState.Input -> {
-                LoginForm(
-                    onSubmit = {username, password ->
-                        viewModel.submitLogin(username, password)
-                    }
-                )
-            }
-            LoginState.Select -> {
-                SelectOptionScreen(
-                    onAdditionButtonClicked = {
-                        viewModel.navigateToGame()  //still need to implement
-                },
-                    onSubtractionButtonClicked = {
-                        viewModel.navigateToGame()
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(dimensionResource(R.dimen.padding_medium))
-                )
-            }
-            LoginState.Game -> {
-               GameScreen()
-        }
-}
-        NavHost(
-            navController = navController,
-            startDestination = LoginScreen.Login.name,
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(innerPadding)
-        ) {
-            composable(route = LoginScreen.Login.name) {
-//                SelectOptionScreen(
-//                    onAdditionButtonClicked = {
-//                        navController.navigate(LoginScreen.Game.name)
-//                    },
-//                    onSubtractionButtonClicked = {
-//                        navController.navigate(LoginScreen.Game.name)},
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .padding(dimensionResource(R.dimen.padding_medium))
-//                )
-            }
-            composable(route = LoginScreen.Select.name) {
-//                GameScreen(
-//                    onCancelButtonClicked = {
-//                        cancelAndNavigateToSelectScreen(navController)
-//                    },
-////                    options = DataSource.flavors.map { id -> context.resources.getString(id) },
-//                    modifier = Modifier.fillMaxHeight()
-//                )
-            }
-//
-        }
-    }
-}
 
 
 
@@ -379,9 +274,13 @@ fun PasswordField(
 }
 
 
-@Preview(showBackground = true, device = "id:Nexus One", showSystemUi = true)
+
 @Composable
-fun LoginFormPreview() {
-    LoginForm(onSubmit = {username, password ->
-        println("Username: $username, Password: $password")})
+fun LoginFormPreview(navigateToSelectScreen: () -> Unit ) {
+    CS3180_SP2024_G04Theme {
+        LoginForm(onSubmit = { username, password ->
+            println("Username: $username, Password: $password")
+        },
+            navigateToSelectScreen = navigateToSelectScreen)
+    }
 }

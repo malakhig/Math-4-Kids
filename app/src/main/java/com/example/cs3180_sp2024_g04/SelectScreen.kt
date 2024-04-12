@@ -42,56 +42,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cs3180_sp2024_g04.ui.theme.CS3180_SP2024_G04Theme
 
-//enum class CurrentScreen(){
-//    Login,
-//    Select,
-//    Addition,
-//    Subtraction
-//}
-//
-//@Composable
-//fun MathApp(
-//    viewModel: OrderViewModel = viewModel(),
-//    navController: NavHostController = rememberNavController()
-//) {
-//    // Get current back stack entry
-//    val backStackEntry by navController.currentBackStackEntryAsState()
-//    // Get the name of the current screen
-//    val currentScreen = CurrentScreen.valueOf(
-//        backStackEntry?.destination?.route ?: CurrentScreen.Login.name
-//    )
-//
-//    Scaffold(
-//    ) { innerPadding ->
-//        val uiState by viewModel.uiState.collectAsState()
-//
-//        NavHost(
-//            navController = navController,
-//            startDestination = CurrentScreen.Login.name,
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .verticalScroll(rememberScrollState())
-//                .padding(innerPadding)
-//        ) {
-//            composable(route = CurrentScreen.Select.name) {
-//                SelectOptionScreen(
-//                    onSubtractionButtonClicked = {
-//                        viewModel.setQuantity(it)
-//                        navController.navigate(CurrentScreen.Addition.name)
-//                    },
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .padding(dimensionResource(R.dimen.padding_medium))
-//                )
-//            }
-//        }
-//    }
-//}
 @Composable
 fun SelectOptionScreen(
     onAdditionButtonClicked: () -> Unit = {},
     onSubtractionButtonClicked: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToGameScreen: () -> Unit
 ) {
     var selectedValue by rememberSaveable { mutableStateOf("") }
 
@@ -104,7 +60,7 @@ fun SelectOptionScreen(
 
     ) {
             Button(
-                onClick = onAdditionButtonClicked,
+                onClick = navigateToGameScreen,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.LightGray),
                 modifier = Modifier.weight(1f)
@@ -141,12 +97,13 @@ fun SelectOptionScreen(
 
 
 
-@Preview(showBackground = true, device = "id:Nexus One", showSystemUi = true)
+
 @Composable
-fun SelectOptionPreview() {
+fun SelectOptionPreview( navigateToGameScreen: () -> Unit) {
     CS3180_SP2024_G04Theme {
         SelectOptionScreen(
-            modifier = Modifier.fillMaxHeight()
+            modifier = Modifier.fillMaxHeight(),
+            navigateToGameScreen = navigateToGameScreen
         )
     }
 }

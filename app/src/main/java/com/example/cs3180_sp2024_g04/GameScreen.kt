@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.cs3180_sp2024_g04.ui.theme.CS3180_SP2024_G04Theme
 
 
 @Composable
@@ -51,10 +52,12 @@ fun flashCard(modifier: Modifier = Modifier, operator: Boolean, operand1:Int, op
 
 
 
-@Preview(showBackground = true, device = "id:Nexus One", showSystemUi = true)
+
 @Composable
-fun gamePreview(){
-    ShowMathProblem(value = "Answer", onChange = {})
+fun gamePreview(navigateBack: () -> Unit){
+    CS3180_SP2024_G04Theme {
+        ShowMathProblem(value = "Answer", onChange = {}, navigateBack = navigateBack)
+    }
 
 }
 
@@ -63,13 +66,14 @@ fun ShowMathProblem (
     AddOrSub: Boolean = true,
     MaxValue: Int = 10,
     value: String = "",
-    onChange: (String) -> Unit = {}
+    onChange: (String) -> Unit = {},
+    navigateBack: () -> Unit
 ) {
     var Op1 by remember{mutableStateOf(0)}
     var Op2 by remember{mutableStateOf(0)}
     var text by remember { mutableStateOf("Answer") }
 
-    Button(onClick = { /* Handle exit action here */ }) {
+    Button(onClick = navigateBack ) {
         Text("Exit")
     }
 
