@@ -28,13 +28,13 @@
 
 #### Malakhi Griffin:
 #### What have you contributed to the project between the last check in and this check in?
--
+-I have helped with navigation and completed it so that it is functional.
 
 #### What have you learned between the last check in and this check in?
--
+-I learned how to used the navHost to traverse through each screen.
 
 #### What do you need help with?
--
+-With some of the UI components and the actual game functionality.
 
 #### What do you expect to complete between the next check in and this check in?
--
+-Improve the look of the app and make sure the game actally works correctly.
