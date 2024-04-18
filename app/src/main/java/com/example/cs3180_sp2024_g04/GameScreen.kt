@@ -87,6 +87,8 @@ fun ShowMathProblem (
     var isCorrect by remember { mutableStateOf(true) } // Track whether the answer is correct
     var text2 by remember { mutableStateOf("") }
     var next by remember { mutableStateOf(false) }
+    var correctAnswer by remember { mutableStateOf(0)}
+    var correctAnswerBool by remember { mutableStateOf(true) }
 
 
     Button(onClick = navigateBack ) {
@@ -123,6 +125,8 @@ fun ShowMathProblem (
                     if (isCorrect) {
                         text2 = "Correct!"
                         next = true
+
+                        if (correctAnswer != 10) correctAnswer++
                     } else {
                         text2 = "Wrong. Try Again"
                     }
@@ -137,6 +141,7 @@ fun ShowMathProblem (
             Text(text = "Check")
         }
 
+
         Button(
             onClick = {
                 Op1 = getRandomNumber(MaxValue)
@@ -145,11 +150,15 @@ fun ShowMathProblem (
                 isCorrect = true
                 next = false
             },
-            enabled = next,
+            enabled = next || (correctAnswer == 10),
+
             modifier = Modifier.padding(vertical = 16.dp)
         ) {
             Text("Next")
         }
+        Text(text = "$correctAnswer/10",
+            )
+
     }
 }
 
