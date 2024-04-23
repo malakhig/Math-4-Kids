@@ -69,5 +69,9 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation("androidx.compose.animation:animation-graphics:1.6.6")
+    implementation("com.airbnb.android:lottie-compose:5.2.0")
+
+
 
 }

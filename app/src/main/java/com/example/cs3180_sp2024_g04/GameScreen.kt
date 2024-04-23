@@ -1,15 +1,20 @@
 package com.example.cs3180_sp2024_g04
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.layout.Column
 //import androidx.compose.foundation.layout.FlowRowScopeInstance.align
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
@@ -17,16 +22,24 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.cs3180_sp2024_g04.ui.theme.CS3180_SP2024_G04Theme
 import kotlin.random.Random
 
@@ -89,6 +102,11 @@ fun ShowMathProblem (
     var next by remember { mutableStateOf(false) }
     var correctAnswer by remember { mutableStateOf(0)}
     var correctAnswerBool by remember { mutableStateOf(true) }
+    var checked by remember { mutableStateOf(false) }
+    var pointed by remember { mutableStateOf(false) }
+    var isPlaying by remember{ mutableStateOf(false)}
+    var isPlayingWrong by remember{ mutableStateOf(false)}
+    var showCheckAnimation by remember { mutableStateOf(false) }
 
 
     Button(onClick = navigateBack ) {
@@ -96,7 +114,17 @@ fun ShowMathProblem (
     }
 
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally ) {
-        flashCard(Modifier, AddOrSub, Op1, Op2)
+        Box(contentAlignment = Alignment.Center) {
+            Row(modifier = Modifier.padding(top = 10.dp), horizontalArrangement = Arrangement.End) {
+                if (isCorrect && checked || showCheckAnimation) {
+                    checkAnimation(modifier = Modifier, isPlaying = isPlaying) { newIsPlaying ->
+                        isPlaying = newIsPlaying
+                    }
+                    showCheckAnimation =true
+                }
+            }
+            flashCard(Modifier, AddOrSub, Op1, Op2)
+        }
 
         Row(
             modifier = Modifier.padding(vertical = 16.dp),
@@ -105,36 +133,56 @@ fun ShowMathProblem (
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(0.8f),
                 value = text,
-                onValueChange = { text = it},
+                singleLine = true,
+                onValueChange = { text = it; checked = false},
                 label = { Text("Answer") },
                 colors = if (isCorrect) TextFieldDefaults.outlinedTextFieldColors() else TextFieldDefaults.outlinedTextFieldColors(
                     unfocusedBorderColor = Color.Red,
                     focusedBorderColor = Color.Red
+                ),
+                keyboardActions = KeyboardActions(onGo = {
+                    if (isCorrect) {
+                        Op1 = getRandomNumber(MaxValue)
+                        Op2 = getRandomNumber(MaxValue)
+                    }
+                }
                 )
             )
         }
         Text(text = text2,
-            style = if (!isCorrect) TextStyle(color = Color.Red) else TextStyle.Default,
+            style = if (!isCorrect && (!checked)) TextStyle(color = Color.Red) else TextStyle.Default,
             )
 
         Button(onClick = {
-            if (text.isNotEmpty()) {
+            if (text.isNotEmpty()&& (!checked)) {
                 try {
                     myVal = text
                     isCorrect = checkRandomAnswer(Op1, Op2, myVal.toInt())
-                    if (isCorrect) {
+                    if (isCorrect && (!pointed)) {
                         text2 = "Correct!"
                         next = true
+                        checked = true
+                        pointed = true
+                        isPlaying = true
+                        showCheckAnimation = true
+
 
                         if (correctAnswer != 10) correctAnswer++
-                    } else {
+                    }else if (pointed){
+                        text2 = "Already checked"
+                    }
+                    else {
                         text2 = "Wrong. Try Again"
+
                     }
                 } catch (e: NumberFormatException) {
                     var invalidInput = true
                     text2 = "Invalid input. Please enter a valid integer."
                 }
-            } else {
+            }else if(isCorrect && checked){
+                text2 = "Already Checked"
+            }
+            else {
                 text2= "Enter a number."
             }
         }) {
@@ -147,8 +195,14 @@ fun ShowMathProblem (
                 Op1 = getRandomNumber(MaxValue)
                 Op2 = getRandomNumber(MaxValue)
                 text = ""
+                text2 = ""
                 isCorrect = true
                 next = false
+                checked = false
+                pointed = false
+                isPlaying = false
+                showCheckAnimation = false
+
             },
             enabled = next || (correctAnswer == 10),
 
@@ -158,6 +212,18 @@ fun ShowMathProblem (
         }
         Text(text = "$correctAnswer/10",
             )
+        Spacer(modifier = Modifier.size(60.dp))
+        Text(
+            text = "Math 4 Kids",
+            fontSize = 30.sp,
+            modifier = Modifier.padding(20.dp),
+        )
+        Image(
+            painter = painterResource(R.drawable.math_logo_png),
+            contentDescription = null,
+            contentScale = ContentScale.Fit,
+
+        )
 
     }
 }
@@ -173,4 +239,30 @@ fun checkRandomAnswer(x: Int, y: Int, answer:Int ): Boolean {
     val check = x + y
     return check == answer.toInt()
 }
+
+@Composable
+fun checkAnimation(modifier: Modifier = Modifier, isPlaying: Boolean, onIsPlayingChange: (Boolean) -> Unit) {
+
+
+    val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.checkmark_animation))
+    val progress by animateLottieCompositionAsState(composition = composition, isPlaying = isPlaying)
+
+    LaunchedEffect(key1 = progress) {
+        if (progress == 0f) {
+            onIsPlayingChange(true)
+        }
+        if (progress == 1f) {
+            onIsPlayingChange(false)
+        }
+    }
+
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
+        modifier = modifier.size(200.dp)
+    )
+}
+
+
+
 

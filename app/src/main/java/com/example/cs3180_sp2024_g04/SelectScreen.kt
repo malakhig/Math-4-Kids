@@ -69,7 +69,8 @@ fun SelectOptionScreen(
                     .padding(horizontal = 10.dp, vertical = 70.dp)
             ) {
                 Text(
-                    text = "Addition",
+                    text = "Addition\n" +
+                            "+",
                     fontSize = 30.sp,
                     color = Color.DarkGray,
                     textAlign = TextAlign.Center,
